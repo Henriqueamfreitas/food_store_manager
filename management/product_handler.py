@@ -58,3 +58,27 @@ def menu_report():
             most_common_type_count = type_count
 
     return f"Products Count: {product_count} - Average Price: ${average_price} - Most Common Type: {most_common_type}"
+
+
+def add_product_extra(menu, *args, **kwargs):
+    keys = list(kwargs.keys())
+    for required_key in args:
+        if keys.count(required_key) == 0:
+            raise KeyError(f"field {required_key} is required")
+
+    for key in keys:
+        if args.count(key) == 0:
+            del kwargs[key]
+
+    highest_id = 0
+    if len(menu) == 0:
+        kwargs["_id"] = 1
+    else:
+        for product in menu:
+            if product["_id"] > highest_id:
+                highest_id = product["_id"]
+        kwargs["_id"] = highest_id + 1
+
+    menu.append(kwargs)
+
+    return kwargs
